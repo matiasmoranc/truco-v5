@@ -770,7 +770,7 @@ textarea {
 
   <!-- <div class="footer small">Brujas Truco Cup - 2025.</div> -->
    <script type="module">
-console.log('test18');
+console.log('test19');
   import {
   initializeApp,
   getApp,
@@ -2009,15 +2009,31 @@ saveAndRerender();
       };
 
       // Resultados inputs
-      document.querySelectorAll('.inpScore').forEach(inp => {
-        inp.onchange = e => {
-          const mid = e.target.dataset.mid; const side = e.target.dataset.side;
-          const setVal = (arr) => { const m = arr.find(x => x.id === mid); if (m) { if (side === 'A') m.scoreA = toIntOrNull(e.target.value); else m.scoreB = toIntOrNull(e.target.value) } }
-          setVal(state.groupMatches); setVal(state.leagueMatches);
-          for (const k of ['R16', 'QF', 'SF', 'F']) { const arr = state.playoffs.brackets[k]; const m = arr.find(x => x.id === mid); if (m) { if (side === 'A') m.scoreA = toIntOrNull(e.target.value); else m.scoreB = toIntOrNull(e.target.value) } }
-          saveAndRerender()
-        }
-      });
+document.querySelectorAll('.inpScore').forEach(inp => {
+  inp.oninput = e => {
+    const mid = e.target.dataset.mid;
+    const side = e.target.dataset.side;
+
+    const updateMatch = (m) => {
+      if (!m) return;
+      if (side === 'A') m.scoreA = toIntOrNull(e.target.value);
+      else m.scoreB = toIntOrNull(e.target.value);
+    };
+
+    updateMatch(state.groupMatches.find(x => x.id === mid));
+    updateMatch(state.leagueMatches.find(x => x.id === mid));
+
+    for (const k of ['R16', 'QF', 'SF', 'F']) {
+      updateMatch(state.playoffs.brackets[k].find(x => x.id === mid));
+    }
+
+    saveState();
+  };
+
+  inp.onblur = () => {
+    saveAndRerender();
+  };
+});
 
       // Playoffs
       const btnSeedKO = document.getElementById('btnSeedKO');
