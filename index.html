@@ -748,7 +748,7 @@
 
   <!-- <div class="footer small">Brujas Truco Cup - 2025.</div> -->
    <script type="module">
-console.log('test5');
+console.log('6');
   import {
   initializeApp,
   getApp,
@@ -785,6 +785,13 @@ window.dbRef = ref;
 window.dbSet = set;
 window.dbGet = get;
 window.dbOnValue = onValue;
+window.firebaseAPI = {
+  db: firebaseDatabase,
+  ref,
+  set,
+  get,
+  onValue
+};
 </script>
 
   <script>
@@ -797,15 +804,19 @@ window.dbOnValue = onValue;
     const VIEW_PUBLIC = new URLSearchParams(location.search).get('view') === 'public' || location.hash === '#public';
 const state = createDefaultState();
 function loadFirebaseState() {
-  console.log('👂 Escuchando Firebase...');
 
-  window.dbOnValue(
-    window.dbRef(window.db, 'torneoActual'),
+  window.firebaseAPI.onValue(
+
+    window.firebaseAPI.ref(
+      window.firebaseAPI.db,
+      'torneoActual'
+    ),
+
     (snapshot) => {
 
       const data = snapshot.val();
 
-      console.log('🔥 Firebase update recibido:', data);
+      console.log('🔥 update', data);
 
       if (!data) return;
 
@@ -828,21 +839,26 @@ function loadFirebaseState() {
     /******************** Utilidades ********************/
     function uid(p = 'id') { return p + '_' + Math.random().toString(36).slice(2, 9) }
 async function saveState() {
+
   const toSave = JSON.parse(JSON.stringify(state));
   delete toSave.ui;
 
-  console.log('Guardando en Firebase...', toSave);
-
   try {
-    await window.dbSet(
-      window.dbRef(window.db, 'torneoActual'),
+
+    await window.firebaseAPI.set(
+      window.firebaseAPI.ref(
+        window.firebaseAPI.db,
+        'torneoActual'
+      ),
       toSave
     );
 
-    console.log('✅ Guardado en Firebase OK');
+    console.log('✅ Guardado Firebase');
 
   } catch (e) {
-    console.error('❌ Firebase save error', e);
+
+    console.error(e);
+
   }
 }
     function loadState() { try { const s = localStorage.getItem(LS_KEY); return s ? JSON.parse(s) : null } catch (e) { return null } }
