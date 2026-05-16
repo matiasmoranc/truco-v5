@@ -748,7 +748,7 @@
 
   <!-- <div class="footer small">Brujas Truco Cup - 2025.</div> -->
    <script type="module">
-console.log('test7');
+console.log('test14');
   import {
   initializeApp,
   getApp,
@@ -911,20 +911,26 @@ function normalizePlayoffSize() {
     const adminContent = document.getElementById('adminContent');
     const publicContent = document.getElementById('publicContent');
 
-  function replaceState(latest) {
-    // Guardamos el UI local actual (pestaña pública) y lo restauramos
-    const keepUI = state.ui ? JSON.parse(JSON.stringify(state.ui)) : null;
+function replaceState(latest) {
+  const keepUI = state.ui ? JSON.parse(JSON.stringify(state.ui)) : null;
 
-    // Limpiamos estado actual
-    for (const k in state) delete state[k];
+  for (const k in state) delete state[k];
 
-    // Ignoramos la `ui` entrante y aplicamos el resto
-    const { ui: _ignoredUI, ...rest } = latest || {};
-    Object.assign(state, rest);
+  const { ui: _ignoredUI, ...rest } = latest || {};
+  Object.assign(state, rest);
 
-    // Restauramos UI local o creamos defaults
-    state.ui = keepUI || { publicTab: 'matches', tableView: 'auto' };
-  }
+  state.playoffs = state.playoffs || {};
+  state.playoffs.stage = state.playoffs.stage || 'none';
+  state.playoffs.championId = state.playoffs.championId || null;
+
+  state.playoffs.brackets = state.playoffs.brackets || {};
+  state.playoffs.brackets.R16 = state.playoffs.brackets.R16 || [];
+  state.playoffs.brackets.QF = state.playoffs.brackets.QF || [];
+  state.playoffs.brackets.SF = state.playoffs.brackets.SF || [];
+  state.playoffs.brackets.F = state.playoffs.brackets.F || [];
+
+  state.ui = keepUI || { publicTab: 'matches', tableView: 'auto' };
+}
 
     // Sólo la vista pública escucha y re-renderiza
     if (VIEW_PUBLIC) {
