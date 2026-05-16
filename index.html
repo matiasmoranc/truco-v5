@@ -716,6 +716,24 @@
       font-weight: 700;
       font-size: 4rem;
     }
+    @media (max-width:600px) {
+      .grid.cols-3 { display: flex; flex-direction: column!important; }
+      .alert {     font-size: 1rem;}
+      b {
+        font-size: 1rem !important;
+      }
+      .card {
+        padding: 17px 3px;
+        max-width: 100%;
+      }
+      .grid {
+          display: flex;
+          flex-wrap: wrap;
+      }
+      .match {
+          min-width: 100%;
+      }
+    }
   </style>
 </head>
 
@@ -748,7 +766,7 @@
 
   <!-- <div class="footer small">Brujas Truco Cup - 2025.</div> -->
    <script type="module">
-console.log('test15');
+console.log('test16');
   import {
   initializeApp,
   getApp,
