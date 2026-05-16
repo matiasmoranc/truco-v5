@@ -748,7 +748,7 @@
 
   <!-- <div class="footer small">Brujas Truco Cup - 2025.</div> -->
    <script type="module">
-console.log('test4');
+console.log('test5');
   import {
   initializeApp,
   getApp,
@@ -780,11 +780,11 @@ const firebaseApp =
 
 const firebaseDatabase = getDatabase(firebaseApp);
 
-window.firebaseDB = firebaseDatabase;
-window.firebaseRef = ref;
-window.firebaseSet = set;
-window.firebaseGet = get;
-window.firebaseOnValue = onValue;
+window.db = firebaseDatabase;
+window.dbRef = ref;
+window.dbSet = set;
+window.dbGet = get;
+window.dbOnValue = onValue;
 </script>
 
   <script>
@@ -799,9 +799,10 @@ const state = createDefaultState();
 function loadFirebaseState() {
   console.log('👂 Escuchando Firebase...');
 
-  window.firebaseOnValue(
-    window.firebaseRef(window.firebaseDB, 'torneoActual'),
+  window.dbOnValue(
+    window.dbRef(window.db, 'torneoActual'),
     (snapshot) => {
+
       const data = snapshot.val();
 
       console.log('🔥 Firebase update recibido:', data);
@@ -833,8 +834,8 @@ async function saveState() {
   console.log('Guardando en Firebase...', toSave);
 
   try {
-    await window.firebaseSet(
-      window.firebaseRef(window.firebaseDB, 'torneoActual'),
+    await window.dbSet(
+      window.dbRef(window.db, 'torneoActual'),
       toSave
     );
 
