@@ -797,6 +797,8 @@ window.firebaseOnValue = onValue;
     const VIEW_PUBLIC = new URLSearchParams(location.search).get('view') === 'public' || location.hash === '#public';
 const state = createDefaultState();
 function loadFirebaseState() {
+  console.log('👂 Escuchando Firebase...');
+
   firebaseOnValue(
     firebaseRef(firebaseDB, 'torneoActual'),
     (snapshot) => {
@@ -2254,6 +2256,7 @@ if (btnPlus && inpNumPairs) {
 
     /******************** Inicializar ********************/
     render();
+loadFirebaseState();
     // Modo público puro: ocultar admin y título
     if (VIEW_PUBLIC) { document.title = (state.meta.title || 'Torneo de Truco') + ' — Público' }
   </script>
