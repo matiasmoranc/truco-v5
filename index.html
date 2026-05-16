@@ -770,7 +770,7 @@ textarea {
 
   <!-- <div class="footer small">Brujas Truco Cup - 2025.</div> -->
    <script type="module">
-console.log('test19');
+console.log('test20');
   import {
   initializeApp,
   getApp,
@@ -842,6 +842,15 @@ function loadFirebaseState() {
       console.log('🔥 update', data);
 
       if (!data) return;
+
+      const incoming = JSON.stringify(data);
+
+      const current = JSON.stringify({
+        ...state,
+        ui: undefined
+      });
+
+      if (incoming === current) return;
 
       replaceState(data);
       render();
@@ -1914,7 +1923,13 @@ function toast(msg, type = 'info') {
     /******************** Bindings ********************/
     function bindAdminEvents() {
       // Título / cantidad
-      document.getElementById('inpTitle').oninput = e => { state.meta.title = e.target.value; saveState() };
+      document.getElementById('inpTitle').oninput = e => {
+  state.meta.title = e.target.value;
+};
+
+document.getElementById('inpTitle').onblur = () => {
+  saveAndRerender();
+};
       document.getElementById('inpTitle').onblur = e => { state.meta.title = e.target.value; saveAndRerender() };
       document.getElementById('inpNumPairs').onchange = e => { state.config.numPairs = Math.max(4, Math.min(30, +e.target.value || 4));
 normalizePlayoffSize();
@@ -1980,9 +1995,22 @@ saveAndRerender();
         saveAndRerender();
       };
       // Nombres
-      document.querySelectorAll('.inpPairName').forEach(inp => {
-        inp.oninput = e => { const id = e.target.dataset.id; const p = state.pairs.find(x => x.id === id); if (p) { p.name = e.target.value } saveState() };
-      });
+ document.querySelectorAll('.inpPairName').forEach(inp => {
+
+  inp.oninput = e => {
+    const id = e.target.dataset.id;
+    const p = state.pairs.find(x => x.id === id);
+
+    if (p) {
+      p.name = e.target.value;
+    }
+  };
+
+  inp.onblur = () => {
+    saveAndRerender();
+  };
+
+});
          // === Randomizar parejas ===
     const btnRandomize = document.getElementById('btnRandomize');
     if (btnRandomize) {
@@ -2027,7 +2055,6 @@ document.querySelectorAll('.inpScore').forEach(inp => {
       updateMatch(state.playoffs.brackets[k].find(x => x.id === mid));
     }
 
-    saveState();
   };
 
   inp.onblur = () => {
